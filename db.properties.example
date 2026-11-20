@@ -1,0 +1,5 @@
+db.host=localhost
+db.port=3306
+db.name=parking_db
+db.user=your_mysql_user
+db.password=change-me

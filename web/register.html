@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register - Campus Parking Management System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-body">
+
+<div class="auth-card">
+  <h1>Create Account</h1>
+  <p class="auth-sub">Register to use the parking system</p>
+
+  <form id="registerForm">
+    <label for="regFullName">Full name</label>
+    <input type="text" id="regFullName" autocomplete="name" maxlength="50" required>
+
+    <label for="regUsername">Username</label>
+    <input type="text" id="regUsername" autocomplete="username" maxlength="20" required>
+    <span class="field-hint">3-20 letters, digits or underscores</span>
+
+    <label for="regPassword">Password</label>
+    <input type="password" id="regPassword" autocomplete="new-password" minlength="6" required>
+    <span class="field-hint">At least 6 characters</span>
+
+    <label for="regConfirm">Confirm password</label>
+    <input type="password" id="regConfirm" autocomplete="new-password" required>
+
+    <button type="submit">Register</button>
+  </form>
+  <p class="msg" id="authMsg"></p>
+
+  <p class="auth-switch">Already registered? <a href="login.html">Log in</a></p>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html>

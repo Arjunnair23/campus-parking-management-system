@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Campus Parking Management System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-body">
+
+<div class="auth-card">
+  <h1>Campus Parking</h1>
+  <p class="auth-sub">Log in to manage parking</p>
+
+  <form id="loginForm">
+    <label for="loginUsername">Username</label>
+    <input type="text" id="loginUsername" autocomplete="username" required>
+
+    <label for="loginPassword">Password</label>
+    <input type="password" id="loginPassword" autocomplete="current-password" required>
+
+    <button type="submit">Log In</button>
+  </form>
+  <p class="msg" id="authMsg"></p>
+
+  <p class="auth-switch">No account yet? <a href="register.html">Register</a></p>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html>

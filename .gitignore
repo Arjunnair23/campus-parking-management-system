@@ -1,0 +1,38 @@
+# Compiled output
+/bin/
+/build/
+/out/
+/target/
+*.class
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.bak
+*~
+
+# Local configuration and secrets
+/db.properties
+/.env
+/.env.*
+!/.env.example
+*.local
+*.local.*
+*credentials*
+*secret*
+*.pem
+*.key
+*.p12
+*.jks
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini

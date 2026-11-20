@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campus Parking Management System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Campus Parking Management System</h1>
+  <div id="statusBar" class="status-bar">
+    <div class="status-pill"><span id="occupiedCount">-</span>/<span id="totalCount">-</span> Slots Occupied</div>
+    <div class="status-pill"><span id="waitingCount">-</span> Waiting</div>
+    <div class="status-pill user-pill">&#128100; <span id="userName"></span></div>
+    <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+  </div>
+</header>
+
+<main>
+  <section class="panel forms-panel">
+
+    <div class="card">
+      <h2>Vehicle Entry</h2>
+      <form id="entryForm">
+        <input type="text" id="entryVehicleNumber" placeholder="Vehicle Number (e.g. KA05XY9999)" required>
+        <input type="text" id="entryOwnerName" placeholder="Owner Name" required>
+        <select id="entryVehicleType">
+          <option value="CAR">Car</option>
+          <option value="BIKE">Bike</option>
+          <option value="STAFF">Staff</option>
+          <option value="VISITOR">Visitor</option>
+        </select>
+        <button type="submit">Park Vehicle</button>
+      </form>
+      <p class="msg" id="entryMsg"></p>
+    </div>
+
+    <div class="card">
+      <h2>Vehicle Exit</h2>
+      <form id="exitForm">
+        <input type="text" id="exitVehicleNumber" placeholder="Vehicle Number" required>
+        <button type="submit">Exit Vehicle</button>
+      </form>
+      <p class="msg" id="exitMsg"></p>
+    </div>
+
+    <div class="card">
+      <h2>Search Vehicle</h2>
+      <form id="searchForm">
+        <input type="text" id="searchVehicleNumber" placeholder="Vehicle Number" required>
+        <button type="submit">Search</button>
+      </form>
+      <p class="msg" id="searchMsg"></p>
+    </div>
+
+    <div class="card">
+      <h2>Search by Slot <span class="count">(BST)</span></h2>
+      <form id="slotForm">
+        <input type="number" id="slotInput" placeholder="Slot number" min="1" required>
+        <button type="submit">Search Slot</button>
+      </form>
+      <p class="msg" id="slotMsg"></p>
+    </div>
+
+    <div class="card">
+      <h2>Find Vehicle <span class="count">(Linear / Binary search)</span></h2>
+      <form id="findForm">
+        <input type="text" id="findNumber" placeholder="Vehicle Number" required>
+        <select id="findAlgo">
+          <option value="linear">Linear search</option>
+          <option value="binary">Binary search (sorts first)</option>
+        </select>
+        <button type="submit">Find</button>
+      </form>
+      <p class="msg" id="findMsg"></p>
+      <p class="hint" id="findStats"></p>
+    </div>
+
+        <div class="card">
+      <h2>Batch Find <span class="count">(sort once, search many)</span></h2>
+      <form id="batchForm">
+        <input type="text" id="batchNumbers" placeholder="KA05AB1234, KA05CD5678, ..." required>
+        <button type="submit">Find All</button>
+      </form>
+      <p class="msg" id="batchMsg"></p>
+      <div class="table-wrap" id="batchWrap" style="display:none">
+        <table>
+          <thead><tr><th>Vehicle No.</th><th>Result</th><th>Linear</th><th>Binary</th></tr></thead>
+          <tbody id="batchBody"></tbody>
+        </table>
+      </div>
+      <p class="hint" id="batchTotals"></p>
+    </div>
+
+        <div class="card">
+      <h2>Reservation Planner <span class="count">(Greedy)</span></h2>
+      <form id="reserveForm">
+        <textarea id="resRequests" rows="6" placeholder="One booking per line:&#10;KA05AB1234 09:00 10:30&#10;KA05CD5678 10:00 11:00" required></textarea>
+        <input type="number" id="resSlots" min="1" max="5" value="1" title="Number of reserved slots" required>
+        <div class="btn-row">
+          <button type="submit">Plan bookings</button>
+          <button type="button" id="resExample" class="secondary">Load example</button>
+        </div>
+      </form>
+      <p class="msg" id="resMsg"></p>
+      <div class="table-wrap" id="resWrap" style="display:none">
+        <table>
+          <thead><tr><th>Reserved slot</th><th>Vehicle</th><th>Time</th></tr></thead>
+          <tbody id="resBody"></tbody>
+        </table>
+      </div>
+      <p class="hint" id="resRejected"></p>
+      <p class="hint" id="resCompare"></p>
+    </div>
+
+    <div class="card">
+      <h2>Campus Zone Graph <span class="count">(BFS)</span></h2>
+      <form id="graphForm">
+        <select id="graphStart">
+          <option value="Entrance">Entrance</option>
+          <option value="ZoneA-Car">ZoneA-Car</option>
+          <option value="ZoneB-Bike">ZoneB-Bike</option>
+          <option value="ZoneC-Staff">ZoneC-Staff</option>
+          <option value="ZoneD-Visitor">ZoneD-Visitor</option>
+        </select>
+        <button type="submit">Run BFS</button>
+      </form>
+      <p class="msg success" id="graphBfs"></p>
+      <ul class="adj" id="graphAdj"></ul>
+    </div>
+
+  </section>
+
+  <section class="panel tables-panel">
+
+    <div class="card">
+      <h2>Currently Parked <span class="count" id="parkedTableCount"></span></h2>
+      <p class="hint" id="parkedSortNote"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th class="sortable" data-sort="slot">Slot</th><th class="sortable" data-sort="number">Vehicle No.</th><th>Owner</th><th>Type</th><th class="sortable" data-sort="time">Entry</th></tr></thead>
+          <tbody id="parkedTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Waiting Queue <span class="count" id="queueTableCount"></span></h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Vehicle No.</th><th>Owner</th><th>Type</th><th>Entry</th></tr></thead>
+          <tbody id="queueTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Recently Exited <span class="count" id="exitTableCount"></span></h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Vehicle No.</th><th>Owner</th><th>Type</th><th>Was Slot</th></tr></thead>
+          <tbody id="exitTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>BST Traversals <span class="count">(keyed by slot)</span></h2>
+      <p class="trav-label">Inorder (sorted)</p><p class="trav" id="treeInorder"></p>
+      <p class="trav-label">Preorder</p><p class="trav" id="treePreorder"></p>
+      <p class="trav-label">Postorder</p><p class="trav" id="treePostorder"></p>
+    </div>
+
+    <div class="card">
+      <h2>Sort Parked Vehicles <span class="count">(Phase 3)</span></h2>
+      <form id="sortForm" class="inline-form">
+        <select id="sortAlgo">
+          <option value="merge">Merge sort</option>
+          <option value="insertion">Insertion sort</option>
+        </select>
+        <select id="sortBy">
+          <option value="slot">by Slot</option>
+          <option value="number">by Vehicle No.</option>
+          <option value="time">by Entry time</option>
+        </select>
+        <button type="submit">Sort</button>
+      </form>
+      <p class="msg success" id="sortSummary"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Slot</th><th>Vehicle No.</th><th>Owner</th><th>Type</th><th>Entry</th></tr></thead>
+          <tbody id="sortTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Algorithm Comparison <span class="count">(Phase 3C)</span></h2>
+      <form id="compareForm" class="inline-form">
+        <button type="submit">Run benchmark</button>
+      </form>
+      <p class="hint" id="compareNote">Runs all four algorithms on generated data. Comparison counts are exact; times vary a little between runs.</p>
+      <div class="table-wrap" id="compareWrap" style="display:none">
+        <table>
+          <thead>
+            <tr>
+              <th>n</th>
+              <th>Merge sort<br>cmp (µs)</th>
+              <th>Insertion sort<br>cmp (µs)</th>
+              <th>Linear<br>avg cmp</th>
+              <th>Binary<br>avg cmp</th>
+              <th id="batchHead">50 lookups:<br>linear</th>
+              <th>sort once<br>+ binary</th>
+              <th>Cheaper</th>
+            </tr>
+          </thead>
+          <tbody id="compareBody"></tbody>
+        </table>
+      </div>
+      <p class="hint">Theory: merge sort O(n log n), insertion sort O(n²), linear search O(n), binary search O(log n) - but binary search needs sorted data, so sorting is a cost to pay once and share across many lookups.</p>
+    </div>
+
+  </section>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
